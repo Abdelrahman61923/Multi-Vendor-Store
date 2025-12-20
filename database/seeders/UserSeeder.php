@@ -22,7 +22,7 @@ class UserSeeder extends Seeder
             'email' => 'mo@gmail.com',
             'password' => Hash::make('password'),
             'phone_number' => '01063446528',
-            'type' => 'admin',
+            'type' => 'user',
             'created_at'=> now(),
             'updated_at'=> now(),
         ]);
@@ -33,7 +33,7 @@ class UserSeeder extends Seeder
                 'email' => 'abdo@gmail.com',
                 'password' => Hash::make('password'),
                 'phone_number' => '01063446527',
-                'type' => 'super-admin',
+                'type' => 'user',
                 'created_at'=> now(),
                 'updated_at'=> now(),
             ],

@@ -7,9 +7,9 @@ use App\Http\Controllers\Dashboard\DashboardController;
 use App\Http\Controllers\Dashboard\CategoriesController;
 
 Route::group([
-    'middleware' => ['auth', 'auth.type:admin,super-admin'],
+    'middleware' => ['auth:admin'],
     'as' => 'dashboard.',   // name
-    'prefix' => 'dashboard',    // url
+    'prefix' => 'admin/dashboard',    // url
 ], function ()
 {
     Route::get('/', [DashboardController::class, 'index'])

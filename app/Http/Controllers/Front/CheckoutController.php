@@ -46,7 +46,7 @@ class CheckoutController extends Controller
             foreach ($items as $store_id => $cart_items) {
                 $order = Order::create([
                     'store_id' => $store_id,
-                    'user_id' => Auth::id(),
+                    'user_id' => Auth::check() ? Auth::id() : null,
                     'payment_method' => 'cod',
                 ]);
                 foreach ($cart_items as $item) {
@@ -72,6 +72,6 @@ class CheckoutController extends Controller
             DB::rollBack();
             throw $e;
         }
-        // return redirect()->route('home');
+        return redirect()->route('home');
     }
 }

@@ -43,7 +43,7 @@ class OrderCreatedNotification extends Notification
                     ->from('notification@ajyal-store.eg', 'AJYAL Store')
                     ->greeting("Hi {$notifiable->name}.")
                     ->line("A new order (#{$this->order->number}) created by {$addr->name} from {$addr->country_name}.")
-                    ->action('View Order', url('/dashboard'))
+                    ->action('View Order', url('/admin/dashboard'))
                     ->line('Thank you for using our application!');
     }
 
@@ -56,7 +56,7 @@ class OrderCreatedNotification extends Notification
         return [
             'body' => "A new order (#{$this->order->number}) created by {$addr->name} from {$addr->country_name}.",
             'icon' => 'fas fa-file',
-            'url' => url('/dashboard'),
+            'url' => url('/admin/dashboard'),
             'order_id' => $this->order->id,
         ];
     }
@@ -70,7 +70,7 @@ class OrderCreatedNotification extends Notification
         return new BroadcastMessage([
             'body' => "A new order (#{$this->order->number}) created by {$addr->name} from {$addr->country_name}.",
             'icon' => 'fas fa-file',
-            'url' => url('/dashboard'),
+            'url' => url('/admin/dashboard'),
             'order_id' => $this->order->id,
         ]);
     }
