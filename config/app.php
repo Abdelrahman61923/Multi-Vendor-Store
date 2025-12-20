@@ -74,6 +74,8 @@ return [
 
     'currency' => 'USD',
 
+    'api_key' => env('API_KEY'),
+
     /*
     |--------------------------------------------------------------------------
     | Application Locale Configuration

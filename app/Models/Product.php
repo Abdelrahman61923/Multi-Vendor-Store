@@ -19,6 +19,14 @@ class Product extends Model
         'rating', 'featured', 'status',
     ];
 
+    protected $hidden = [
+        'created_at', 'updated_at', 'deleted_at', 'image',
+    ];
+
+    protected $appends = [
+        'image_url'
+    ];
+
     // Relations
     public function category()
     {
@@ -35,17 +43,45 @@ class Product extends Model
         return $this->belongsToMany(Tag::class);
     }
 
-
     // Local scope
+
     public function scopeFilter(Builder $builder, $filters)
     {
-        if ($filters['name'] ?? false) {
-            $builder->where('products.name', 'LIKE', "%{$filters['name']}%");
-        }
-        if ($filters['status'] ?? false) {
-            $builder->where('products.status', '=', $filters['status']);
-        }
+        $options = array_merge([
+            'store_id' => null,
+            'category_id' => null,
+            'tag_id' => null,
+            'status' =>'active',
+        ], $filters);
+
+        $builder->when($options['status'], function($builder, $value) {
+            $builder->where('status', $value);
+        });
+        $builder->when($options['store_id'], function($builder, $value) {
+            $builder->where('store_id', $value);
+        });
+        $builder->when($options['category_id'], function($builder, $value) {
+            $builder->where('category_id', $value);
+        });
+        $builder->when($options['tag_id'], function($builder, $value) {
+            $builder->whereExists(function($query) use ($value) {
+                $query->select(1)
+                    ->from('product_tag')
+                    ->whereRaw('product_id = product.id')
+                    ->where('tag_id', $value);
+            });
+        });
     }
+
+    // public function scopeFilter(Builder $builder, $filters)
+    // {
+    //     if ($filters['name'] ?? false) {
+    //         $builder->where('products.name', 'LIKE', "%{$filters['name']}%");
+    //     }
+    //     if ($filters['status'] ?? false) {
+    //         $builder->where('products.status', '=', $filters['status']);
+    //     }
+    // }
 
     public function scopeActive(Builder $builder)
     {
@@ -72,6 +108,9 @@ class Product extends Model
             if ($user && $user->store_id){
                 $builder->where('store_id', '=', $user->store_id);
             }
+        });
+        static::creating(function(Product $product) {
+            $product->slug = Str::slug($product->name);
         });
     }
 
