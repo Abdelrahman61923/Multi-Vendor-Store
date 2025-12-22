@@ -1,5 +1,14 @@
 {
     "This is a comment1": "aside.php file",
+    "Home": "الرئيسية",
+    "About Us": "من نحن",
+    "Contact Us": "تواصل معنا",
+    "Hello": "مرحبا",
+    "Sign In": "تسجيل الدخول",
+    "Sign Out": "تسجيل الخروج",
+    "Register": "تسجيل",
+
+
     "Graduation Platform": "منصه مشاريع التخرج",
     "Dashboard": "لوحه التحكم",
     "Users": "المستخدمين",

@@ -38,6 +38,17 @@
                 </p>
             </a>
         </li>
+        @can('roles.view')
+            <li class="nav-item">
+                <a href="{{ route('dashboard.roles.index') }}"
+                    class="nav-link {{ request()->routeIs('dashboard.roles.*') ? 'active' : '' }}">
+                    <i class="far fa-circle nav-icon"></i>
+                    <p>
+                        Roles
+                    </p>
+                </a>
+            </li>
+        @endcan
     </ul>
 </nav>
 <!-- /.sidebar-menu -->
