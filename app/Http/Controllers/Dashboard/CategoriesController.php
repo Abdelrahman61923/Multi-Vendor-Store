@@ -3,11 +3,10 @@
 namespace App\Http\Controllers\Dashboard;
 
 use App\Models\Category;
-use App\Models\Product;
-use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Storage;
 
 class CategoriesController extends Controller
 {
@@ -16,6 +15,8 @@ class CategoriesController extends Controller
      */
     public function index()
     {
+        $this->authorize('viewAny', Category::class);
+
         $request = request();
         $categories = Category::with('parent')
             ->withCount([
@@ -33,6 +34,8 @@ class CategoriesController extends Controller
      */
     public function create()
     {
+        $this->authorize('create', Category::class);
+
         $category = new Category();
         $parents = Category::all();
         return view('dashboard.categories.create', compact('parents', 'category'));
@@ -43,6 +46,8 @@ class CategoriesController extends Controller
      */
     public function store(Request $request)
     {
+        $this->authorize('create', Category::class);
+
         $request->validate(Category::rules(),[
             'required' => 'This :attribute field is required!',
             'name.unique' => 'This name is already Exists',
@@ -68,6 +73,8 @@ class CategoriesController extends Controller
     public function show(string $id)
     {
         $category = Category::findOrFail($id);
+        $this->authorize('view', $category);
+
         return view('dashboard.categories.show', compact('category'));
     }
 
@@ -76,6 +83,8 @@ class CategoriesController extends Controller
      */
     public function edit(string $id)
     {
+        $category = Category::findOrFail($id);
+        $this->authorize('update', $category);
         // لو انا طلبت ال id فى url فوق وهو اصلا مش موجود findOrFail هترجعلى 404 وانا عاوز اروح لمكان تاتى
         try {
             $category = Category::findOrFail($id);
@@ -104,6 +113,7 @@ class CategoriesController extends Controller
         ]);
 
         $category = Category::findOrFail($id);
+        $this->authorize('update', $category);
 
         $old_image = $category->image;
         $data = $request->except('image');
@@ -129,6 +139,8 @@ class CategoriesController extends Controller
     public function destroy(string $id)
     {
         $category = Category::findOrFail($id);
+        $this->authorize('delete', $category);
+
         $category->delete();
 
         // Category::destroy($id);
@@ -138,6 +150,7 @@ class CategoriesController extends Controller
 
     public function trash()
     {
+        $this->authorize('view', Category::class);
         $categories = Category::onlyTrashed()->paginate(2);
         return view('dashboard.categories.trash', compact('categories'));
     }
@@ -152,6 +165,8 @@ class CategoriesController extends Controller
     public function forceDelete($id)
     {
         $category = Category::onlyTrashed()->findOrFail($id);
+        $this->authorize('update', $category);
+
         $category->forceDelete();
         if ($category->image) {
             Storage::disk('public')->delete($category->image);

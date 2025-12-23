@@ -10,8 +10,12 @@
 @section('content')
 
     <div class="mb-5">
-        <a href="{{ route('dashboard.products.create') }}" class="btn btn-sm btn-outline-primary mr-2">Create</a>
-        <a href="{{ route('dashboard.products.trash') }}" class="btn btn-sm btn-outline-dark">Trash</a>
+        @can('create', \App\Models\Product::class)
+            <a href="{{ route('dashboard.products.create') }}" class="btn btn-sm btn-outline-primary mr-2">Create</a>
+        @endcan
+        @can('viewAny', \App\Models\Product::class)
+            <a href="{{ route('dashboard.products.trash') }}" class="btn btn-sm btn-outline-dark">Trash</a>
+        @endcan
     </div>
 
     <x-alert type="success"/>
@@ -47,21 +51,25 @@
                     <tr>
                         <td><img src="{{ asset('storage/' . $product->image) }}" alt="" height="50"></td>
                         <td>{{ $product->id }}</td>
-                        <td>{{ $product->name }}</td>
+                        <td><a href="{{ route('dashboard.products.show', $product->id) }}">{{ $product->name }}</a></td>
                         <td>{{ $product->category->name }}</td>
                         <td>{{ $product->store->name }}</td>
                         <td>{{ $product->status }}</td>
                         <td>{{ $product->created_at }}</td>
                         <td>
-                            <a href="{{ route('dashboard.products.edit', $product->id) }}" class="btn btn-small btn-outline-success">Edit</a>
+                            @can('update', $product)
+                                <a href="{{ route('dashboard.products.edit', $product->id) }}" class="btn btn-small btn-outline-success">Edit</a>
+                            @endcan
                         </td>
                         <td>
-                            <form action="{{ route('dashboard.products.destroy', $product->id) }}" method="post">
-                                @csrf
-                                {{-- form method spoofing تحايل --}}
-                                @method('delete')
-                                <button type="submit" class="btn btn-small btn-outline-danger">Delete</button>
-                            </form>
+                            @can('delete', $product)
+                                <form action="{{ route('dashboard.products.destroy', $product->id) }}" method="post">
+                                    @csrf
+                                    {{-- form method spoofing تحايل --}}
+                                    @method('delete')
+                                    <button type="submit" class="btn btn-small btn-outline-danger">Delete</button>
+                                </form>
+                            @endcan
                         </td>
                     </tr>
                 @endforeach

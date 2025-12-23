@@ -10,10 +10,12 @@
 @section('content')
 
     <div class="mb-5">
-        @can('categories.create')
+        @can('create', \App\Models\Category::class)
             <a href="{{ route('dashboard.categories.create') }}" class="btn btn-sm btn-outline-primary mr-2">Create</a>
         @endcan
-        <a href="{{ route('dashboard.categories.trash') }}" class="btn btn-sm btn-outline-dark">Trash</a>
+        @can('viewAny', \App\Models\Category::class)
+            <a href="{{ route('dashboard.categories.trash') }}" class="btn btn-sm btn-outline-dark">Trash</a>
+        @endcan
     </div>
 
     <x-alert type="success"/>
@@ -54,12 +56,12 @@
                         <td>{{ $category->status }}</td>
                         <td>{{ $category->created_at }}</td>
                         <td>
-                            @can('categories.update')
+                            @can('update', $category)
                                 <a href="{{ route('dashboard.categories.edit', $category->id) }}" class="btn btn-small btn-outline-success">Edit</a>
                             @endcan
                         </td>
                         <td>
-                            @can('categories.delete')
+                            @can('delete', $category)
                                 <form action="{{ route('dashboard.categories.destroy', $category->id) }}" method="post">
                                     @csrf
                                     {{-- form method spoofing تحايل --}}

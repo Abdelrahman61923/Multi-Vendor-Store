@@ -14,7 +14,6 @@ class AuthServiceProvider extends ServiceProvider
      * @var array<class-string, class-string>
      */
     protected $policies = [
-        //
     ];
 
     public function register()
@@ -31,6 +30,13 @@ class AuthServiceProvider extends ServiceProvider
     public function boot(): void
     {
         $this->registerPolicies();
+
+        // فوق كل الصلاحيات
+        // Gate::before(function ($user, $ability) {
+        //     if ($user->super_admin) {
+        //         return true;
+        //     }
+        // });
 
         foreach ($this->app->make('abilities') as $code => $label) {
             Gate::define($code, function($user) use ($code){

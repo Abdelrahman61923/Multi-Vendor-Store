@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers\Dashboard;
 
-use App\Models\Store;
 use App\Models\Product;
 use App\Models\Category;
 use App\Models\Tag;
@@ -18,6 +17,8 @@ class ProductController extends Controller
      */
     public function index()
     {
+        $this->authorize('viewAny', Product::class);
+
         $request = request();
         $products = Product::with(['category', 'store'])
         ->filter($request->query())
@@ -30,6 +31,8 @@ class ProductController extends Controller
      */
     public function create()
     {
+        $this->authorize('create', Product::class);
+
         $product = new Product();
         $categories = Category::all();
         return view('dashboard.products.create', compact('product', 'categories'));
@@ -40,6 +43,8 @@ class ProductController extends Controller
      */
     public function store(Request $request)
     {
+        $this->authorize('create', Product::class);
+
         $request->validate(Product::rules());
 
         $request->merge([
@@ -84,7 +89,9 @@ class ProductController extends Controller
      */
     public function show(string $id)
     {
-        //
+        $product = Product::findOrFail($id);
+        $this->authorize('view', $product);
+        return view('dashboard.products.show', compact('product'));
     }
 
     /**
@@ -92,6 +99,9 @@ class ProductController extends Controller
      */
     public function edit(string $id)
     {
+        $product = Product::findOrFail($id);
+        $this->authorize('update', $product);
+
         // To solve the problem (404:not found)
         try {
             $product = Product::findOrFail($id);
@@ -108,6 +118,9 @@ class ProductController extends Controller
      */
     public function update(Request $request, string $id)
     {
+        $product = Product::findOrFail($id);
+        $this->authorize('view', $product);
+
         $request->validate(Product::rules());
 
         $product = Product::findOrFail($id);
@@ -152,6 +165,8 @@ class ProductController extends Controller
     public function destroy(string $id)
     {
         $product = Product::findOrFail($id);
+        $this->authorize('delete', $product);
+
         $product->delete();
 
         return redirect()->route('dashboard.products.index')

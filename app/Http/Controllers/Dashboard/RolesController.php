@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\Dashboard;
 
 use App\Models\Role;
-use App\Models\RoleAbility;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
@@ -14,6 +13,8 @@ class RolesController extends Controller
      */
     public function index()
     {
+        $this->authorize('viewAny', Role::class);
+
         $roles = Role::paginate();
         return view('dashboard.roles.index', compact('roles'));
     }
@@ -23,6 +24,8 @@ class RolesController extends Controller
      */
     public function create()
     {
+        $this->authorize('create', Role::class);
+
         $role = new Role();
         return view('dashboard.roles.create', compact('role'));
     }
@@ -32,6 +35,8 @@ class RolesController extends Controller
      */
     public function store(Request $request)
     {
+        $this->authorize('create', Role::class);
+
         $request->validate([
             'name' => ['required', 'string', 'max:255'],
             'abilities' => ['required', 'array'],
@@ -49,7 +54,8 @@ class RolesController extends Controller
      */
     public function show(string $id)
     {
-        //
+        $role = Role::findOrFail($id);
+        $this->authorize('view', $role);
     }
 
     /**
@@ -57,6 +63,8 @@ class RolesController extends Controller
      */
     public function edit(Role $role)
     {
+        $this->authorize('update', $role);
+
         $role_abilities = $role->abilities()->pluck('type', 'ability')->toArray();
         return view('dashboard.roles.edit', compact('role', 'role_abilities'));
     }
@@ -66,6 +74,8 @@ class RolesController extends Controller
      */
     public function update(Request $request, Role $role)
     {
+        $this->authorize('update', $role);
+
         $request->validate([
             'name' => ['required', 'string', 'max:255'],
             'abilities' => ['required', 'array'],
@@ -76,7 +86,6 @@ class RolesController extends Controller
         return redirect()->route('dashboard.roles.index')->with([
             'success' => 'Role Updated successfully',
         ]);
-
     }
 
     /**
@@ -84,6 +93,9 @@ class RolesController extends Controller
      */
     public function destroy(string $id)
     {
+        $role = Role::findOrFail($id);
+        $this->authorize('delete', $role);
+
         Role::destroy($id);
 
         return redirect()->route('dashboard.roles.index')->with([

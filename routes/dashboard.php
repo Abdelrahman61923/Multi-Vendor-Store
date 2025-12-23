@@ -1,8 +1,11 @@
 <?php
 
+use App\Http\Controllers\Dashboard\AdminsController;
 use App\Http\Controllers\Dashboard\ProductController;
 use App\Http\Controllers\Dashboard\ProfileController;
 use App\Http\Controllers\Dashboard\RolesController;
+use App\Http\Controllers\Dashboard\UsersController;
+use App\Http\Controllers\ImportProductsController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Dashboard\DashboardController;
 use App\Http\Controllers\Dashboard\CategoriesController;
@@ -32,9 +35,15 @@ Route::group([
     Route::put('/products/{product}/restore', [ProductController::class, 'restore'])->name('products.restore');
     Route::delete('/products/{product}/force-delete', [ProductController::class, 'forceDelete'])->name('products.force-delete');
 
-    Route::resource('/products', ProductController::class);
+    Route::get('/products/import', [ImportProductsController::class, 'create'])
+        ->name('products.import');
 
+    Route::post('/products/import', [ImportProductsController::class, 'store']);
+
+    Route::resource('/products', ProductController::class);
     Route::resource('/roles', RolesController::class);
+    Route::resource('/admins', AdminsController::class);
+    Route::resource('/users', UsersController::class);
 });
 
 // Route::middleware('auth')->as('dashboard.')->prefix('dashboard')->group(function () {
