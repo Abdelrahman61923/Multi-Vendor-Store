@@ -1,5 +1,8 @@
 <?php
 
+use App\Http\Controllers\Auth\SocialLoginController;
+use App\Http\Controllers\Front\PaymentsController;
+use App\Http\Controllers\SocailController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Front\CartController;
@@ -36,8 +39,24 @@ Route::group([
     Route::get('auth/user/2fa', [TwoFactorAuthentcationController::class, 'index'])
         ->name('front.2fa');
 
-    Route::post('currency', [CurrencyConverterController::class, 'store'])
+        Route::post('currency', [CurrencyConverterController::class, 'store'])
         ->name('currency.store');
+
+    Route::get('auth/{provider}/redirect', [SocialLoginController::class, 'redirect'])
+        ->name('auth.socilaite.redirect');
+
+    Route::get('auth/{provider}/callback', [SocialLoginController::class, 'callback'])
+        ->name('auth.socilaite.callback');
+
+    Route::get('orders/{order}/pay', [PaymentsController::class, 'create'])
+        ->name('orders.payments.create');
+
+    Route::post('orders/{order}/stripe/payment-intent', [PaymentsController::class, 'createStripePaymentIntent'])
+        ->name('stripe.paymentIntent.create');
+
+    Route::get('orders/{order}/pay/stripe/callback', [PaymentsController::class, 'confirm'])
+        ->name('stripe.return');
+
 });
 
 // require __DIR__.'/auth.php';

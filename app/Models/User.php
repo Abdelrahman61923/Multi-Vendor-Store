@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Concens\HasRoles;
 use Laravel\Sanctum\HasApiTokens;
+use Illuminate\Support\Facades\Crypt;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Fortify\TwoFactorAuthenticatable;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
@@ -26,7 +27,10 @@ class User extends Authenticatable implements MustVerifyEmail
         'password',
         'type',
         'phone_number',
-        'last_active_at'
+        'last_active_at',
+        'provider',
+        'provider_id',
+        'provider_token',
     ];
 
     /**
@@ -50,6 +54,7 @@ class User extends Authenticatable implements MustVerifyEmail
     protected $casts = [
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
+
     ];
 
     // Relations
@@ -64,4 +69,10 @@ class User extends Authenticatable implements MustVerifyEmail
             'name' => config('app.name'),
         ]);
     }
+
+    public function getProviderTokenAttribute($value)
+    {
+        return Crypt::decryptString($value);
+    }
+
 }

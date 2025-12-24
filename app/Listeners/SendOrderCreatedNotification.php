@@ -29,7 +29,10 @@ class SendOrderCreatedNotification
 
         // send notification to single user
         $user = Admin::where('store_id', '=', $order->store_id)->first();
-        $user->notify(new OrderCreatedNotification($order));
+
+        if ($user){
+            $user->notify(new OrderCreatedNotification($order));
+        }
 
         // send notification to mulitible users
         // $users = User::where('store_id', '=', $order->store_id)->get();
