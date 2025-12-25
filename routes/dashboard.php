@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Dashboard\AdminsController;
+use App\Http\Controllers\Dashboard\OrdersController;
 use App\Http\Controllers\Dashboard\ProductController;
 use App\Http\Controllers\Dashboard\ProfileController;
 use App\Http\Controllers\Dashboard\RolesController;
@@ -42,6 +43,7 @@ Route::group([
         Route::post('/products/import', 'store');
     });
 
+    Route::resource('/orders', OrdersController::class);
     Route::resource('/products', ProductController::class);
     Route::resource('/roles', RolesController::class);
     Route::resource('/admins', AdminsController::class);

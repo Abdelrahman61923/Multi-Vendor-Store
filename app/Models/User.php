@@ -75,4 +75,13 @@ class User extends Authenticatable implements MustVerifyEmail
         return Crypt::decryptString($value);
     }
 
+    public static function rules($id = 0)
+    {
+        return [
+            'name' => ['required', 'string', 'max:255'],
+            'email' => ['required', 'string', 'email', 'max:255', "unique:users,email,$id"],
+            'phone_number' => ['required', 'string','max:20', "unique:users,phone_number,$id"],
+            'roles' => ['array'],
+        ];
+    }
 }

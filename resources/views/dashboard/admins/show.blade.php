@@ -1,41 +1,36 @@
 @extends('layouts.dashboard')
 
-@section('title', $category->name)
+@section('title', $admin->name)
 
 @section('breadcrumb')
     @parent
-    <li class="breadcrumb-item active">Categories</li>
-    <li class="breadcrumb-item active">{{ $category->name }}</li>
+    <li class="breadcrumb-item">Admins</li>
+    <li class="breadcrumb-item active">{{ $admin->name }}</li>
 @endsection
 
 @section('content')
     <table class="table">
         <thead>
             <tr>
-                <th></th>
                 <th>Name</th>
                 <th>Store</th>
-                <th>Status</th>
-                <th>Created At</th>
+                <th>Username</th>
+                <th>Phone Number</th>
+                <th>Owner</th>
+                <th>Roles</th>
+                <th>Email</th>
             </tr>
         </thead>
         <tbody>
-            @if ($category->products->count())
-                @foreach ($category->products()->with('store')->latest()->paginate('5') as $product)
-                    <tr>
-                        <td><img src="{{ asset('storage/' . $product->image) }}" alt="" height="50"></td>
-                        <td>{{ $product->name }}</td>
-                        <td>{{ $product->store->name }}</td>
-                        <td>{{ $product->status }}</td>
-                        <td>{{ $product->created_at }}</td>
-                    </tr>
-                @endforeach
-            @else
-                <tr>
-                    <td colspan="5">No Products defined.</td>
-                </tr>
-            @endif
+            <tr>
+                <td>{{ $admin->name }}</td>
+                <td>{{ $admin->store->name }}</td>
+                <td>{{ $admin->username }}</td>
+                <td>{{ $admin->phone_number }}</td>
+                <td>{{ $admin->super_admin ? 'Yes' : 'No' }}</td>
+                <td>{{ $admin->roles->pluck('name')->implode(', ') ?: '-' }}</td>
+                <td>{{ $admin->email }}</td>
+            </tr>
         </tbody>
     </table>
-    {{ $category->products()->with('store')->latest()->paginate('5')->withQueryString()->links() }}
 @endsection

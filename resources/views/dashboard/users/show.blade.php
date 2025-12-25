@@ -1,41 +1,28 @@
 @extends('layouts.dashboard')
 
-@section('title', $category->name)
+@section('title', $user->name)
 
 @section('breadcrumb')
     @parent
-    <li class="breadcrumb-item active">Categories</li>
-    <li class="breadcrumb-item active">{{ $category->name }}</li>
+    <li class="breadcrumb-item active">Users</li>
+    <li class="breadcrumb-item active">{{ $user->name }}</li>
 @endsection
 
 @section('content')
     <table class="table">
         <thead>
             <tr>
-                <th></th>
                 <th>Name</th>
-                <th>Store</th>
-                <th>Status</th>
-                <th>Created At</th>
+                <th>Phone Number</th>
+                <th>Email</th>
             </tr>
         </thead>
         <tbody>
-            @if ($category->products->count())
-                @foreach ($category->products()->with('store')->latest()->paginate('5') as $product)
-                    <tr>
-                        <td><img src="{{ asset('storage/' . $product->image) }}" alt="" height="50"></td>
-                        <td>{{ $product->name }}</td>
-                        <td>{{ $product->store->name }}</td>
-                        <td>{{ $product->status }}</td>
-                        <td>{{ $product->created_at }}</td>
-                    </tr>
-                @endforeach
-            @else
-                <tr>
-                    <td colspan="5">No Products defined.</td>
-                </tr>
-            @endif
+            <tr>
+                <td>{{ $user->name }}</td>
+                <td>{{ $user->phone_number }}</td>
+                <td>{{ $user->email }}</td>
+            </tr>
         </tbody>
     </table>
-    {{ $category->products()->with('store')->latest()->paginate('5')->withQueryString()->links() }}
 @endsection

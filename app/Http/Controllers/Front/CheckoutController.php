@@ -43,8 +43,6 @@ class CheckoutController extends Controller
 
         $items = $cart->get()->groupBy('product.store_id')->all();
 
-
-
         DB::beginTransaction();
         try {
             foreach ($items as $store_id => $cart_items) {

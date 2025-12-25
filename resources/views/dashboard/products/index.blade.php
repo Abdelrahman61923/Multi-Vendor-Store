@@ -40,6 +40,7 @@
                 <th>Name</th>
                 <th>Category</th>
                 <th>Store</th>
+                <th>Quantaty</th>
                 <th>Status</th>
                 <th>Created At</th>
                 <th colspan="2"></th>
@@ -54,6 +55,7 @@
                         <td><a href="{{ route('dashboard.products.show', $product->id) }}">{{ $product->name }}</a></td>
                         <td>{{ $product->category->name }}</td>
                         <td>{{ $product->store->name }}</td>
+                        <td>{{ $product->quantity }}</td>
                         <td>{{ $product->status }}</td>
                         <td>{{ $product->created_at }}</td>
                         <td>
@@ -65,7 +67,6 @@
                             @can('delete', $product)
                                 <form action="{{ route('dashboard.products.destroy', $product->id) }}" method="post">
                                     @csrf
-                                    {{-- form method spoofing تحايل --}}
                                     @method('delete')
                                     <button type="submit" class="btn btn-small btn-outline-danger">Delete</button>
                                 </form>
@@ -75,7 +76,7 @@
                 @endforeach
             @else
                 <tr>
-                    <td colspan="9" class="text-muted text-center">No products defined.</td>
+                    <td colspan="10" class="text-muted text-center">No products defined.</td>
                 </tr>
             @endif
         </tbody>

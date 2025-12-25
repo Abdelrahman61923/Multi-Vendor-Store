@@ -4,10 +4,12 @@ namespace App\Http\Controllers\Dashboard;
 
 use App\Models\Role;
 use App\Models\Admin;
+use App\Models\Store;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Str;
 
 class AdminsController extends Controller
 {
@@ -41,19 +43,24 @@ class AdminsController extends Controller
     public function store(Request $request)
     {
         $this->authorize('create', Admin::class);
-        $request->validate([
-            'name' => ['required', 'string', 'max:255'],
-            'roles' => ['required', 'array'],
-        ]);
+        $request->validate(Admin::rules());
 
         $admin = Admin::create([
             'name' => $request->post('name'),
             'email' => $request->post('email'),
-            'username' => 'abdo1',
-            'phone_number' => '10003898',
+            'username' => $request->post('username'),
+            'phone_number' => $request->post('phone_number'),
             'password' => Hash::make('password'),
         ]);
         $admin->roles()->attach($request->roles);
+
+        $store = Store::create([
+            'name' => $admin->name . ' Store',
+            'slug' => Str::slug($admin->name . ' Store'),
+        ]);
+        $admin->update([
+            'store_id' => $store->id,
+        ]);
 
         return redirect()->route('dashboard.admins.index')->with([
             'success' => 'Admin Created successfully',
@@ -88,10 +95,7 @@ class AdminsController extends Controller
     {
         $this->authorize('update', $admin);
 
-        $request->validate([
-            'name' => ['required', 'string', 'max:255'],
-            'roles' => ['required', 'array'],
-        ]);
+        $request->validate(Admin::rules($admin->id));
 
         $admin->update($request->all());
         $admin->roles()->sync($request->roles);

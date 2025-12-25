@@ -3,18 +3,20 @@
 namespace App\Models;
 
 use Carbon\Carbon;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Order extends Model
 {
     use HasFactory;
 
     protected $fillable = [
-        'store_id', 'user_id', 'payment_method', 'status', 'payment_status',
+        'store_id', 'user_id', 'payment_method', 'status', 'payment_status', 'total'
     ];
 
-    //
+    // Relations
     public function store()
     {
         return $this->belongsTo(Store::class);
@@ -59,6 +61,12 @@ class Order extends Model
 
     protected static function booted()
     {
+        static::addGlobalScope('store', function(Builder $builder){
+            $user = Auth::user();
+            if ($user && $user->store_id){
+                $builder->where('store_id', '=', $user->store_id);
+            }
+        });
         static::creating(function(Order $order) {
             $order->number = Order::getNextOrderNumber();
         });
@@ -72,5 +80,19 @@ class Order extends Model
             return $number + 1;
         }
         return $year . '0001';
+    }
+
+    // Local Scope
+    public function scopePending(Builder $builder)
+    {
+        $builder->where('status', '=', 'pending');
+    }
+    public function scopeCanceled(Builder $builder)
+    {
+        $builder->where('status', '=', 'canceled');
+    }
+    public function scopeCompleted(Builder $builder)
+    {
+        $builder->where('status', '=', 'completed');
     }
 }

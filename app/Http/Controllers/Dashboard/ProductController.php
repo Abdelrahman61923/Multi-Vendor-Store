@@ -87,9 +87,8 @@ class ProductController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show(Product $product)
     {
-        $product = Product::findOrFail($id);
         $this->authorize('view', $product);
         return view('dashboard.products.show', compact('product'));
     }
@@ -123,7 +122,6 @@ class ProductController extends Controller
 
         $request->validate(Product::rules());
 
-        $product = Product::findOrFail($id);
         $old_image = $product->image;
         $data = $request->except('image', 'tags');
 

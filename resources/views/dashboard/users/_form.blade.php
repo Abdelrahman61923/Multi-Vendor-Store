@@ -9,8 +9,17 @@
     </div>
 @endif
 
-<div class="form-group">
-    <x-form.input label="Name" name="name" :value="$user->name" />
+<div class="row">
+    <div class="col-md-6">
+        <div class="form-group">
+            <x-form.input label="Name" name="name" :value="$user->name" />
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="form-group">
+            <x-form.input label="Phone Number" name="phone_number" :value="$user->phone_number" />
+        </div>
+    </div>
 </div>
 <div class="form-group">
     <x-form.input label="Email" name="email" :value="$user->email" />

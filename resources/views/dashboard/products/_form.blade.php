@@ -19,14 +19,19 @@
     <x-form.textarea label="Description" name="description" :value="$product->description" />
 </div>
 <div class="row">
-    <div class="col-md-6">
+    <div class="col-md-4">
         <div class="form-group">
             <x-form.input label="Price" type="number" name="price" :value="$product->price" />
         </div>
     </div>
-    <div class="col-md-6">
+    <div class="col-md-4">
         <div class="form-group">
             <x-form.input label="Compare Price" type="number" name="compare_price" :value="$product->compare_price" />
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="form-group">
+            <x-form.input label="Quantity" type="number" name="quantity" :value="$product->quantity" />
         </div>
     </div>
 </div>

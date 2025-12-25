@@ -60,7 +60,7 @@ class PaymentsController extends Controller
             ])->save();
 
             $order->forceFill([
-                'status' => 'completed',
+                'payment_status' => 'paid',
                 'payment_method' => $paymentIntent->payment_method_types[0] ?? 'stripe',
             ])->save();
 

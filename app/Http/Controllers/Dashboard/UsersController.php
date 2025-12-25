@@ -6,6 +6,7 @@ use App\Models\Role;
 use App\Models\User;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Hash;
 
 class UsersController extends Controller
 {
@@ -39,6 +40,18 @@ class UsersController extends Controller
     public function store(Request $request)
     {
         $this->authorize('create', User::class);
+
+        $request->validate(User::rules());
+        $user = User::create([
+            'name' => $request->post('name'),
+            'phone_number' => $request->post('phone_number'),
+            'email' => $request->post('email'),
+            'password' => Hash::make('password'),
+        ]);
+        $user->roles()->attach($request->roles);
+        return redirect()->route('dashboard.users.index')->with([
+            'success' => 'User Created successfully',
+        ]);
     }
 
     /**
@@ -70,10 +83,7 @@ class UsersController extends Controller
     {
         $this->authorize('update', $user);
 
-        $request->validate([
-            'name' => ['required', 'string', 'max:255'],
-            'roles' => ['required', 'array'],
-        ]);
+        $request->validate(User::rules($user->id));
 
         $user->update($request->all());
         $user->roles()->sync($request->roles);
