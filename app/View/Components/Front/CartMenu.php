@@ -1,8 +1,7 @@
 <?php
 
-namespace App\View\Components;
+namespace App\View\Components\Front;
 
-use App\Facades\Cart;
 use App\Repositories\Cart\CartRepository;
 use Closure;
 use Illuminate\Contracts\View\View;
@@ -30,6 +29,6 @@ class CartMenu extends Component
      */
     public function render(): View|Closure|string
     {
-        return view('components.cart-menu');
+        return view('components.front.cart-menu');
     }
 }

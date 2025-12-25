@@ -11,42 +11,39 @@ use App\Http\Controllers\Dashboard\DashboardController;
 use App\Http\Controllers\Dashboard\CategoriesController;
 
 Route::group([
-    'middleware' => ['auth:admin,web'],
-    'as' => 'dashboard.',   // name
-    'prefix' => 'admin/dashboard',    // url
+    'middleware' => ['auth:admin'],
+    'as' => 'dashboard.',
+    'prefix' => 'admin/dashboard',
 ], function ()
 {
     Route::get('/', [DashboardController::class, 'index'])
         ->name('dashboard');
 
-    Route::get('/profile', [ProfileController::class, 'edit'])
-        ->name('profile.edit');
+    Route::controller(ProfileController::class)->group(function () {
+        Route::get('/profile','edit')->name('profile.edit');
+        Route::patch('/profile', 'update')->name('profile.update');
+    });
 
-    Route::patch('/profile', [ProfileController::class, 'update'])
-        ->name('profile.update');
-
-    Route::get('/categories/trash', [CategoriesController::class, 'trash'])->name('categories.trash');
-    Route::put('/categories/{category}/restore', [CategoriesController::class, 'restore'])->name('categories.restore');
-    Route::delete('/categories/{category}/force-delete', [CategoriesController::class, 'forceDelete'])->name('categories.force-delete');
-
+    Route::controller(CategoriesController::class)->group(function () {
+        Route::get('/categories/trash', 'trash')->name('categories.trash');
+        Route::put('/categories/{category}/restore', 'restore')->name('categories.restore');
+        Route::delete('/categories/{category}/force-delete', 'forceDelete')->name('categories.force-delete');
+    });
     Route::resource('/categories', CategoriesController::class);
 
-    Route::get('/products/trash', [ProductController::class, 'trash'])->name('products.trash');
-    Route::put('/products/{product}/restore', [ProductController::class, 'restore'])->name('products.restore');
-    Route::delete('/products/{product}/force-delete', [ProductController::class, 'forceDelete'])->name('products.force-delete');
+    Route::controller(ProductController::class)->group(function () {
+        Route::get('/products/trash', 'trash')->name('products.trash');
+        Route::put('/products/{product}/restore', 'restore')->name('products.restore');
+        Route::delete('/products/{product}/force-delete', 'forceDelete')->name('products.force-delete');
+    });
 
-    Route::get('/products/import', [ImportProductsController::class, 'create'])
-        ->name('products.import');
-
-    Route::post('/products/import', [ImportProductsController::class, 'store']);
+    Route::controller(ImportProductsController::class)->group(function () {
+        Route::get('/products/import', 'create')->name('products.import');
+        Route::post('/products/import', 'store');
+    });
 
     Route::resource('/products', ProductController::class);
     Route::resource('/roles', RolesController::class);
     Route::resource('/admins', AdminsController::class);
     Route::resource('/users', UsersController::class);
 });
-
-// Route::middleware('auth')->as('dashboard.')->prefix('dashboard')->group(function () {
-
-// });
-

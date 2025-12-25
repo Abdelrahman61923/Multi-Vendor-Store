@@ -1,6 +1,6 @@
 <?php
 
-namespace App\View\Components;
+namespace App\View\Components\Dashboard;
 
 use Closure;
 use Illuminate\Support\Facades\Auth;
@@ -26,7 +26,7 @@ class Nav extends Component
      */
     public function render(): View|Closure|string
     {
-        return view('components.nav');
+        return view('components.dashboard.nav');
     }
 
     protected function prepareItems($items)

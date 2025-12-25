@@ -51,7 +51,7 @@
                 </div>
 
                 {{-- @include('layouts.partials.nav') --}}
-                <x-nav />
+                <x-dashboard.nav />
             </div>
             <!-- /.sidebar -->
         </aside>

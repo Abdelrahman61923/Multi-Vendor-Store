@@ -1,21 +1,21 @@
 <?php
 
-namespace App\View\Components;
+namespace App\View\Components\Front;
 
 use Closure;
 use App\Models\Category;
 use Illuminate\View\Component;
 use Illuminate\Contracts\View\View;
 
-class FrontLayout extends Component
+class Categories extends Component
 {
-    public $title;
+    public $categories;
     /**
      * Create a new component instance.
      */
-    public function __construct($title = null)
+    public function __construct()
     {
-        $this->title = $title ?? config('app.name');
+        $this->categories = Category::with('products')->active()->get();
     }
 
     /**
@@ -23,6 +23,6 @@ class FrontLayout extends Component
      */
     public function render(): View|Closure|string
     {
-        return view('layouts.front');
+        return view('components.front.categories');
     }
 }

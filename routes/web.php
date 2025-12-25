@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Auth\SocialLoginController;
+use App\Http\Controllers\Front\CategoriesController;
 use App\Http\Controllers\Front\PaymentsController;
 use App\Http\Controllers\SocailController;
 use Illuminate\Support\Facades\Route;
@@ -28,37 +29,40 @@ Route::group([
     'prefix' => LaravelLocalization::setLocale(),
 ], function() {
     Route::get('/', [HomeController::class, 'index'])->name('home');
-    Route::get('/products', [ProductController::class, 'index'])->name('products.index');
-    Route::get('/products/{product:slug}', [ProductController::class, 'show'])->name('products.show');
+
+    Route::controller(ProductController::class)->group(function () {
+        Route::get('/products','index')->name('products.index');
+        Route::get('/products/{product:slug}','show')->name('products.show');
+    });
+
+    Route::controller(CategoriesController::class)->group(function () {
+        Route::get('/categories/{slug}','show')->name('categories.show');
+    });
 
     Route::resource('cart', CartController::class);
 
-    Route::get('checkout', [CheckoutController::class, 'create'])->name('checkout');
-    Route::post('checkout', [CheckoutController::class, 'store']);
+    Route::controller(CheckoutController::class)->group(function () {
+        Route::get('checkout','create')->name('checkout');
+        Route::post('checkout','store');
+    });
 
     Route::get('auth/user/2fa', [TwoFactorAuthentcationController::class, 'index'])
         ->name('front.2fa');
 
-        Route::post('currency', [CurrencyConverterController::class, 'store'])
+    Route::post('currency', [CurrencyConverterController::class, 'store'])
         ->name('currency.store');
 
-    Route::get('auth/{provider}/redirect', [SocialLoginController::class, 'redirect'])
-        ->name('auth.socilaite.redirect');
+    Route::controller(SocialLoginController::class)->group(function () {
+        Route::get('auth/{provider}/redirect', 'redirect')->name('auth.socilaite.redirect');
+        Route::get('auth/{provider}/callback', 'callback')->name('auth.socilaite.callback');
+    });
 
-    Route::get('auth/{provider}/callback', [SocialLoginController::class, 'callback'])
-        ->name('auth.socilaite.callback');
-
-    Route::get('orders/{order}/pay', [PaymentsController::class, 'create'])
-        ->name('orders.payments.create');
-
-    Route::post('orders/{order}/stripe/payment-intent', [PaymentsController::class, 'createStripePaymentIntent'])
-        ->name('stripe.paymentIntent.create');
-
-    Route::get('orders/{order}/pay/stripe/callback', [PaymentsController::class, 'confirm'])
-        ->name('stripe.return');
+    Route::controller(PaymentsController::class)->group(function () {
+        Route::get('orders/{order}/pay','create')->name('orders.payments.create');
+        Route::post('orders/{order}/stripe/payment-intent','createStripePaymentIntent')->name('stripe.paymentIntent.create');
+        Route::get('orders/{order}/pay/stripe/callback','confirm')->name('stripe.return');
+    });
 
 });
-
-// require __DIR__.'/auth.php';
 
 require __DIR__.'/dashboard.php';

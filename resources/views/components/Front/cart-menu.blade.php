@@ -7,7 +7,9 @@
     <div class="shopping-item">
         <div class="dropdown-cart-header">
             <span>{{ $items->count() }} Items</span>
-            <a href="{{ route('cart.index') }}">View Cart</a>
+            @if ($items->count())
+                <a href="{{ route('cart.index') }}">View Cart</a>
+            @endif
         </div>
         <ul class="shopping-list">
             @foreach ($items as $item)

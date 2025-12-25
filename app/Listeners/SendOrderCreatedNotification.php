@@ -28,14 +28,14 @@ class SendOrderCreatedNotification
         $order = $event->order;
 
         // send notification to single user
-        $user = Admin::where('store_id', '=', $order->store_id)->first();
+        // $user = Admin::where('store_id', '=', $order->store_id)->first();
 
-        if ($user){
-            $user->notify(new OrderCreatedNotification($order));
-        }
+        // if ($user){
+        //     $user->notify(new OrderCreatedNotification($order));
+        // }
 
         // send notification to mulitible users
-        // $users = User::where('store_id', '=', $order->store_id)->get();
-        // Notification::send($users, new OrderCreatedNotification($order));
+        $users = Admin::where('store_id', '=', $order->store_id)->get();
+        Notification::send($users, new OrderCreatedNotification($order));
     }
 }

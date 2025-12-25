@@ -88,7 +88,6 @@
                                         </select>
                                     </div>
                                 </li>
-
                             </ul>
                         </div>
                     </div>
@@ -96,8 +95,8 @@
                         <div class="top-middle">
                             <ul class="useful-links">
                                 <li><a href="{{ route('home') }}">{{ __('Home') }}</a></li>
-                                <li><a href="about-us.html">{{ __('About Us') }}</a></li>
-                                <li><a href="contact.html">{{ __('Contact Us') }}</a></li>
+                                <li><a href="javascript:void(0);">{{ __('About Us') }}</a></li>
+                                <li><a href="javascript:void(0);">{{ __('Contact Us') }}</a></li>
                             </ul>
                         </div>
                     </div>
@@ -161,9 +160,6 @@
                                             <option selected>All</option>
                                             <option value="1">option 01</option>
                                             <option value="2">option 02</option>
-                                            <option value="3">option 03</option>
-                                            <option value="4">option 04</option>
-                                            <option value="5">option 05</option>
                                         </select>
                                     </div>
                                 </div>
@@ -183,7 +179,7 @@
                             <div class="nav-hotline">
                                 <i class="lni lni-phone"></i>
                                 <h3>Hotline:
-                                    <span>(+100) 123 456 7890</span>
+                                    <span>{{ App\Models\Admin::where('super_admin', '0')->value('phone_number') }}</span>
                                 </h3>
                             </div>
                             <div class="navbar-cart">
@@ -194,7 +190,7 @@
                                     </a>
                                 </div>
 
-                                <x-cart-menu />
+                                <x-front.cart-menu />
 
                             </div>
                         </div>
@@ -209,27 +205,9 @@
                 <div class="col-lg-8 col-md-6 col-12">
                     <div class="nav-inner">
                         <!-- Start Mega Category Menu -->
-                        <div class="mega-category-menu">
-                            <span class="cat-button"><i class="lni lni-menu"></i>All Categories</span>
-                            <ul class="sub-category">
-                                @foreach ($categories as $category)
-                                    @if ($category->products()->count())
-                                        <li><a href="product-grids.html">{{ $category->name }}<i
-                                                    class="lni lni-chevron-right"></i></a>
-                                            <ul class="inner-sub-category">
-                                                @foreach ($category->products()->latest()->limit(4)->get() as $product)
-                                                    <li><a
-                                                            href="{{ route('products.show', $product->slug) }}">{{ $product->name }}</a>
-                                                    </li>
-                                                @endforeach
-                                            </ul>
-                                        </li>
-                                    @else
-                                        <li><a href="product-grids.html">{{ $category->name }}</a></li>
-                                    @endif
-                                @endforeach
-                            </ul>
-                        </div>
+
+                        <x-front.categories />
+
                         <!-- End Mega Category Menu -->
                         <!-- Start Navbar -->
                         <nav class="navbar navbar-expand-lg">

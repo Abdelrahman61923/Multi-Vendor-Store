@@ -12,6 +12,6 @@ class Admin extends User
     use HasFactory, Notifiable, HasApiTokens, HasRoles;
 
     protected $fillable = [
-        'name', 'email', 'username', 'phone_number', 'password', 'status', 'super_admin', 'last_active_at'
+        'store_id', 'name', 'email', 'username', 'phone_number', 'password', 'super_admin', 'status', 'last_active_at'
     ];
 }

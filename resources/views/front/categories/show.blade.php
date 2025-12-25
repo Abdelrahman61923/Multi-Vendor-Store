@@ -1,4 +1,4 @@
-<x-front-layout>
+<x-front-layout title="{{ $category->name }}">
     @push('styles')
         <style>
             .pagination {
@@ -11,21 +11,21 @@
             }
         </style>
     @endpush
-    <!-- Start breadcrumb -->
+    <!-- Start Breadcrumbs -->
     <x-slot:breadcrumb>
         <div class="breadcrumbs">
             <div class="container">
                 <div class="row align-items-center">
                     <div class="col-lg-6 col-md-6 col-12">
                         <div class="breadcrumbs-content">
-                            <h1 class="page-title">Shop Grid</h1>
+                            <h1 class="page-title">{{ $category->name }}</h1>
                         </div>
                     </div>
                     <div class="col-lg-6 col-md-6 col-12">
                         <ul class="breadcrumb-nav">
                             <li><a href="{{ route('home') }}"><i class="lni lni-home"></i> Home</a></li>
                             <li><a href="javascript:void(0)">Shop</a></li>
-                            <li>Shop Grid</li>
+                            <li>{{ $category->name }}</li>
                         </ul>
                     </div>
                 </div>
@@ -34,7 +34,6 @@
     </x-slot:breadcrumb>
     <!-- End Breadcrumbs -->
 
-    <!-- Start Product Grids -->
     <section class="product-grids section">
         <div class="container">
             <div class="row">
@@ -55,9 +54,9 @@
                             <h3>All Categories</h3>
                             <ul class="list">
                                 @foreach ($categories as $category)
-                                    <li>
-                                        <a href="{{ route('categories.show', $category->slug) }}">{{ $category->name }}</a><span>({{ $category->products()->count() }})</span>
-                                    </li>
+                                <li>
+                                    <a href="{{ route('categories.show', $category->slug) }}">{{ $category->name }}</a><span>({{ $category->products()->count() }})</span>
+                                </li>
                                 @endforeach
 
                             </ul>
@@ -202,11 +201,13 @@
                                 aria-labelledby="nav-grid-tab">
                                 <div class="row">
                                     @foreach ($products as $product)
-                                        <div class="col-lg-4 col-md-6 col-12">
-                                            <!-- Start Single Product -->
-                                            <x-product-card :product="$product" />
-                                            <!-- End Single Product -->
-                                        </div>
+                                    <div class="col-lg-4 col-md-6 col-12">
+                                        <!-- Start Single Product -->
+
+                                        <x-product-card :product="$product" />
+
+                                        <!-- End Single Product -->
+                                    </div>
                                     @endforeach
                                 </div>
                                 <div class="row">
@@ -220,10 +221,9 @@
                             <div class="tab-pane fade" id="nav-list" role="tabpanel"
                                 aria-labelledby="nav-list-tab">
                                 <div class="row">
-                                    @foreach ($products as $product)
-                                        <div class="col-lg-12 col-md-12 col-12">
-                                            <!-- Start Single Product -->
-                                            <div class="single-product">
+                                @foreach ($products as $product)
+                                    <div class="col-lg-12 col-md-12 col-12">
+                                        <div class="single-product">
                                                 <div class="row align-items-center">
                                                     <div class="col-lg-4 col-md-4 col-12">
                                                         <div class="product-image">
@@ -269,9 +269,8 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                            <!-- End Single Product -->
-                                        </div>
-                                    @endforeach
+                                    </div>
+                                @endforeach
                                 </div>
                                 <div class="row">
                                     <div class="col-12">
@@ -287,5 +286,5 @@
             </div>
         </div>
     </section>
-    <!-- End Product Grids -->
+
 </x-front-layout>

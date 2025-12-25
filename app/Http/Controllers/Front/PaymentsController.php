@@ -59,6 +59,11 @@ class PaymentsController extends Controller
                 'transaction_data' => json_encode($paymentIntent),
             ])->save();
 
+            $order->forceFill([
+                'status' => 'completed',
+                'payment_method' => $paymentIntent->payment_method_types[0] ?? 'stripe',
+            ])->save();
+
             event('payment.created', $payment->id);
 
             return redirect()->route('home', [
